@@ -226,10 +226,21 @@ module JetSpider
       visit n.value
     end
 
+    def opt_node(n)
+      return n.value if n.class != Array
+    end
+
     def visit_AddNode(n)
-      visit n.left
-      visit n.value
-      @asm.add
+      opt_lefe_node = opt_node(n.left)
+      opt_right_node = opt_node(n.value)
+
+      if opt_lefe_node.class == opt_right_node.class
+        @asm.int8 opt_lefe_node + opt_right_node
+      else
+        visit n.left
+        visit n.value
+        @asm.add
+      end
     end
 
     def visit_SubtractNode(n)
