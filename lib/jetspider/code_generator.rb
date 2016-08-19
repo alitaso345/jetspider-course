@@ -227,14 +227,25 @@ module JetSpider
     end
 
     def opt_node(n)
-      return n.value if n.class != Array
+      if n.class == RKelly::Nodes::NumberNode
+        return n.value
+      elsif n.class == RKelly::Nodes::AddNode
+        left = opt_node(n.left)
+        right = opt_node(n.value)
+
+        if left.class == Integer && right.class == Integer
+          return left + right 
+        else
+          return n
+        end
+      end
     end
 
     def visit_AddNode(n)
       opt_lefe_node = opt_node(n.left)
       opt_right_node = opt_node(n.value)
 
-      if opt_lefe_node.class == opt_right_node.class
+      if opt_lefe_node.class == Integer && opt_right_node.class == Integer
         @asm.int8 opt_lefe_node + opt_right_node
       else
         visit n.left
