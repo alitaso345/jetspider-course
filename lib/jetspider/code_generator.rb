@@ -238,6 +238,8 @@ module JetSpider
         else
           return n
         end
+      else
+        return n
       end
     end
 
@@ -248,8 +250,9 @@ module JetSpider
       if opt_lefe_node.class == Integer && opt_right_node.class == Integer
         @asm.int8 opt_lefe_node + opt_right_node
       else
-        visit n.left
-        visit n.value
+        binding.pry
+        visit opt_lefe_node if opt_lefe_node.left
+        visit opt_right_node  if opt_right_node.value
         @asm.add
       end
     end
